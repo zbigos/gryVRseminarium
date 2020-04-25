@@ -2964,6 +2964,7 @@ GameObject:
   - component: {fileID: -7209414675606647666}
   - component: {fileID: -2038546576376118040}
   - component: {fileID: 8865966231455034793}
+  - component: {fileID: 8849104584602845477}
   m_Layer: 0
   m_Name: ArisaNew
   m_TagString: Player
@@ -3110,6 +3111,22 @@ MonoBehaviour:
   localRotationSensitivity: 0.01
   localScaleSensitivity: 0.01
   target: {fileID: 6115391268260219202}
+--- !u!114 &8849104584602845477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7683985086575820274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f6f3bf89aa97405989c802ba270f815, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  clientAuthority: 0
+  animator: {fileID: 3635431434208043675}
 --- !u!1 &7806237913526610233
 GameObject:
   m_ObjectHideFlags: 0
