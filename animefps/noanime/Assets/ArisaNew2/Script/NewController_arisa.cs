@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Mirror;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
@@ -40,84 +41,107 @@ public class NewController_arisa : MonoBehaviour
 			orgColHight = col.height;
 			orgVectColCenter = col.center;
 		}
-	
-	
 
-		void Update ()
+
+
+	void Update()
+	{
+		if (this.GetComponent<NetworkIdentity>().isLocalPlayer)
 		{
-			float h = Input.GetAxis ("Horizontal");				
-			float v = Input.GetAxis ("Vertical");				
-			anim.SetFloat ("Speed", v);							
-			anim.SetFloat ("Direction", h); 						
-			anim.speed = animSpeed;								
-			currentBaseState = anim.GetCurrentAnimatorStateInfo (0);	
+			float h = Input.GetAxis("Horizontal");
+			float v = Input.GetAxis("Vertical");
+			anim.SetFloat("Speed", v);
+			anim.SetFloat("Direction", h);
+			anim.speed = animSpeed;
+			currentBaseState = anim.GetCurrentAnimatorStateInfo(0);
 			rb.useGravity = true;
 
-			velocity = new Vector3 (0, 0, v);		
-			velocity = transform.TransformDirection (velocity);
-			if (v > 0.1) {
-				velocity *= forwardSpeed;		
-			} else if (v < -0.1) {
-				velocity *= backwardSpeed;	
+			velocity = new Vector3(0, 0, v);
+			velocity = transform.TransformDirection(velocity);
+			if (v > 0.1)
+			{
+				velocity *= forwardSpeed;
 			}
-		
-			if (Input.GetButtonDown ("Jump")) {	
-				if (currentBaseState.nameHash == locoState) {
-					if (!anim.IsInTransition (0)) {
-						rb.AddForce (Vector3.up * jumpPower, ForceMode.VelocityChange);
-						anim.SetBool ("Jump", true);		
+			else if (v < -0.1)
+			{
+				velocity *= backwardSpeed;
+			}
+
+			if (Input.GetButtonDown("Jump"))
+			{
+				if (currentBaseState.nameHash == locoState)
+				{
+					if (!anim.IsInTransition(0))
+					{
+						rb.AddForce(Vector3.up * jumpPower, ForceMode.VelocityChange);
+						anim.SetBool("Jump", true);
 					}
 				}
 			}
-		
-			transform.localPosition += velocity * Time.fixedDeltaTime;
-			transform.Rotate (0, h * rotateSpeed, 0);	
 
-			if (currentBaseState.nameHash == locoState) {
-				if (useCurves) {
-					resetCollider ();
+			transform.localPosition += velocity * Time.fixedDeltaTime;
+			transform.Rotate(0, h * rotateSpeed, 0);
+
+			if (currentBaseState.nameHash == locoState)
+			{
+				if (useCurves)
+				{
+					resetCollider();
 				}
 			}
 
-		    else if (currentBaseState.nameHash == jumpState) {
-				if (!anim.IsInTransition (0)) {			
-					if (useCurves) {
-						float jumpHeight = anim.GetFloat ("JumpHeight");
-						float gravityControl = anim.GetFloat ("GravityControl"); 
+			else if (currentBaseState.nameHash == jumpState)
+			{
+				if (!anim.IsInTransition(0))
+				{
+					if (useCurves)
+					{
+						float jumpHeight = anim.GetFloat("JumpHeight");
+						float gravityControl = anim.GetFloat("GravityControl");
 						if (gravityControl > 0)
-							rb.useGravity = false;	
-										
-						Ray ray = new Ray (transform.position + Vector3.up, -Vector3.up);
-						RaycastHit hitInfo = new RaycastHit ();
-						if (Physics.Raycast (ray, out hitInfo)) {
-							if (hitInfo.distance > useCurvesHeight) {
-								col.height = orgColHight - jumpHeight;			
+							rb.useGravity = false;
+
+						Ray ray = new Ray(transform.position + Vector3.up, -Vector3.up);
+						RaycastHit hitInfo = new RaycastHit();
+						if (Physics.Raycast(ray, out hitInfo))
+						{
+							if (hitInfo.distance > useCurvesHeight)
+							{
+								col.height = orgColHight - jumpHeight;
 								float adjCenterY = orgVectColCenter.y + jumpHeight;
-								col.center = new Vector3 (0, adjCenterY, 0);	
-							} else {				
-								resetCollider ();
+								col.center = new Vector3(0, adjCenterY, 0);
+							}
+							else
+							{
+								resetCollider();
 							}
 						}
-					}			
-					anim.SetBool ("Jump", false);
+					}
+					anim.SetBool("Jump", false);
 				}
 			}
 
-		    else if (currentBaseState.nameHash == idleState) {
-				    if (useCurves) {
-					    resetCollider ();
-				    }
-				    if (Input.GetButtonDown ("Jump")) {
-					    anim.SetBool ("Rest", true);
-				    }
-			    }
+			else if (currentBaseState.nameHash == idleState)
+			{
+				if (useCurves)
+				{
+					resetCollider();
+				}
+				if (Input.GetButtonDown("Jump"))
+				{
+					anim.SetBool("Rest", true);
+				}
+			}
 
-		    else if (currentBaseState.nameHash == restState) {
-				    if (!anim.IsInTransition (0)) {
-					    anim.SetBool ("Rest", false);
-				    }
-			    }
-		    }
+			else if (currentBaseState.nameHash == restState)
+			{
+				if (!anim.IsInTransition(0))
+				{
+					anim.SetBool("Rest", false);
+				}
+			}
+		}
+	}
 		    void resetCollider ()
 		    {
 			    col.height = orgColHight;
